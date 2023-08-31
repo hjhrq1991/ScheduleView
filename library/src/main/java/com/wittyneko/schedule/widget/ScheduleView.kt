@@ -514,7 +514,7 @@ class ScheduleView : FrameLayout {
         if (itemEditView != null) {
             mAdapter?.apply {
                 val index = itemViewList.indexOf(itemEditView!!)
-                if (index < getItemCount()) bindEdit(getItem(index), editView)
+                if (index < getItemCount()) bindEdit(getItem(index), editView, index)
             }
         } else {
             mAdapter?.bindCreate(editView)
@@ -989,8 +989,8 @@ class ScheduleView : FrameLayout {
     fun notifyItem(position: Int) {
         mAdapter?.apply {
             if (position < getItemCount() && position < itemViewList.size) {
-                val view = itemViewList.get(position)
-                bindView(getItem(position), view)
+                val view = itemViewList[position]
+                bindView(getItem(position), view, position)
             }
         }
     }
@@ -1001,7 +1001,7 @@ class ScheduleView : FrameLayout {
                 val item = adapter.getItem(position)
                 val view = itemViewList.getOrNull(position)
                     ?: createItem(Period.ZERO, Period.ZERO).also { itemViewList.add(it) }
-                adapter.bindView(item, view)
+                adapter.bindView(item, view, position)
             }
 
             val removeList = if (itemViewList.size > adapter.getItemCount()) {
@@ -1032,14 +1032,14 @@ class ScheduleView : FrameLayout {
         var viewList: MutableList<ScheduleItem>
     )
 
-    abstract class Adapter<T>() {
+    abstract class Adapter<T> {
         abstract fun getItemCount(): Int
 
         abstract fun getItem(position: Int): T
 
-        abstract fun bindView(item: T, view: ScheduleItem)
+        abstract fun bindView(item: T, view: ScheduleItem, position: Int)
 
-        abstract fun bindEdit(item: T, view: ScheduleEdit)
+        abstract fun bindEdit(item: T, view: ScheduleEdit, position: Int)
 
         abstract fun bindCreate(view: ScheduleEdit)
     }
