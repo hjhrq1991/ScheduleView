@@ -210,8 +210,8 @@ class ScheduleDelegate {
         current_time_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_text_margin_start, current_time_text_margin_start)
         current_time_show_point = typedArray.getBoolean(R.styleable.ScheduleView_current_time_show_point, current_time_show_point)
         current_time_point_src = typedArray.getDrawable(R.styleable.ScheduleView_current_time_point_src).takeIf { it!=null } ?: current_time_point_src
-        current_time_point_width = typedArray.getInteger(R.styleable.ScheduleView_current_time_point_width, current_time_point_width)
-        current_time_point_height = typedArray.getInteger(R.styleable.ScheduleView_current_time_point_height, current_time_point_height)
+        current_time_point_width = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_width, current_time_point_width)
+        current_time_point_height = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_height, current_time_point_height)
         current_time_point_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_margin_start, current_time_point_margin_start)
         current_time_line_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_margin_start, current_time_line_margin_start)
         current_time_line_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_margin_end, current_time_line_margin_end)

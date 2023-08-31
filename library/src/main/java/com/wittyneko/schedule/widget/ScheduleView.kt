@@ -94,13 +94,13 @@ class ScheduleView : FrameLayout {
         }
 
         view.topPoint.asLayoutParams<MarginLayoutParams>().apply {
-            view.topPoint.background = mDelegate.edit_point_src
+            view.topPoint.setImageDrawable(mDelegate.edit_point_src)
             width = mDelegate.edit_point_size
             height = mDelegate.edit_point_size
             topMargin = - mDelegate.edit_point_size / 2
         }
         view.bottomPoint.asLayoutParams<MarginLayoutParams>().apply {
-            view.bottomPoint.background = mDelegate.edit_point_src
+            view.bottomPoint.setImageDrawable(mDelegate.edit_point_src)
             width = mDelegate.edit_point_size
             height = mDelegate.edit_point_size
             bottomMargin = - mDelegate.edit_point_size / 2
@@ -148,7 +148,7 @@ class ScheduleView : FrameLayout {
         }
         view.point.apply {
             this.visibility = if (mDelegate.current_time_show_point) View.VISIBLE else View.GONE
-            this.background = mDelegate.current_time_point_src
+            this.setImageDrawable(mDelegate.current_time_point_src)
             this.asLayoutParams<MarginLayoutParams>().apply {
                 width = mDelegate.current_time_point_width
                 height = mDelegate.current_time_point_height
@@ -650,7 +650,7 @@ class ScheduleView : FrameLayout {
 
         item.ivLeft.apply {
             this.visibility = if (mDelegate.item_show_left_icon) View.VISIBLE else View.GONE
-            this.background = mDelegate.item_left_icon_src
+            this.setImageDrawable(mDelegate.item_left_icon_src)
         }
 
         item.tvContent.apply {
@@ -922,7 +922,7 @@ class ScheduleView : FrameLayout {
                     )
                 }
                 item.background = bg
-                item.ivLeft.background = left
+                item.ivLeft.setImageDrawable(left)
                 item.tvContent.setTextColor(color)
             }
         }

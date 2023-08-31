@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import com.wittyneko.schedule.R
 import com.wittyneko.schedule.extensions.frameOnScreen
@@ -39,9 +40,9 @@ class ScheduleEdit : FrameLayout {
     val isShow get() = parent != null
 
     val editTouchView by lazy { findViewById<View>(R.id.edit_touch) }
-    val topPoint by lazy { findViewById<View>(R.id.top_point) }
+    val topPoint by lazy { findViewById<ImageView>(R.id.top_point) }
     val topTouchView by lazy { findViewById<View>(R.id.top_touch) }
-    val bottomPoint by lazy { findViewById<View>(R.id.bottom_point) }
+    val bottomPoint by lazy { findViewById<ImageView>(R.id.bottom_point) }
     val bottomTouchView by lazy { findViewById<View>(R.id.bottom_touch) }
     val startTimeView by lazy { findViewById<TextView>(R.id.tv_start_time) }
     val endTimeView by lazy { findViewById<TextView>(R.id.tv_end_time) }
