@@ -49,6 +49,7 @@ class ScheduleDelegate {
     lateinit var item_end_left_icon_src: Drawable
 
     var edit_enable = true
+    var append_enable = true
     lateinit var edit_background: Drawable
     var edit_margin_start: Int = 0
     var edit_margin_end: Int = 0
@@ -117,6 +118,7 @@ class ScheduleDelegate {
         item_end_left_icon_src = resources.drawable(R.drawable.bg_schedule_item_past_left)
 
         edit_enable = true
+        append_enable = true
         edit_background = resources.drawable(R.drawable.bg_schedule_edit)
         edit_margin_start = resources.idp(56)
         edit_margin_end = resources.idp(15)
@@ -182,6 +184,7 @@ class ScheduleDelegate {
         item_end_left_icon_src = typedArray.getDrawable(R.styleable.ScheduleView_item_end_left_icon_src).takeIf { it!=null } ?: item_end_left_icon_src
 
         edit_enable = typedArray.getBoolean(R.styleable.ScheduleView_edit_enable, edit_enable)
+        append_enable = typedArray.getBoolean(R.styleable.ScheduleView_append_enable, append_enable)
         edit_background = typedArray.getDrawable(R.styleable.ScheduleView_edit_background).takeIf { it!=null } ?: edit_background
         edit_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_margin_start, edit_margin_start)
         edit_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_margin_end, edit_margin_end)

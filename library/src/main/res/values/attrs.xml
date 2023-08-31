@@ -25,7 +25,8 @@
         <attr name="item_end_text_color" format="color" /><!--完结 计划项字体颜色-->
         <attr name="item_end_left_icon_src" format="reference|color" /><!--完结 计划项左边icon资源-->
 
-        <attr name="edit_enable" format="boolean" /><!--是否允许编辑、新建-->
+        <attr name="edit_enable" format="boolean" /><!--是否允许编辑-->
+        <attr name="append_enable" format="boolean" /><!--是否允许新建-->
         <attr name="edit_background" format="reference|color" /><!--编辑背景-->
         <attr name="edit_margin_start" format="dimension" /><!--编辑左边距-->
         <attr name="edit_margin_end" format="dimension" /><!--编辑右边距-->

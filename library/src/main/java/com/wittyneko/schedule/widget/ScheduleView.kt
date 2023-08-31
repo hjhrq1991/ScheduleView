@@ -458,7 +458,7 @@ class ScheduleView : FrameLayout {
                         cancelClickListener.onClick(this)
                     }
                 } else {
-                    if (!isRemoveItem && mDelegate.edit_enable) {
+                    if (!isRemoveItem && mDelegate.append_enable) {
                         val start = distanceToTime(mLastFocusY).round().takeIf { it.hours < 23 }
                             ?: Period.hours(23)
                         showEdit(start)
