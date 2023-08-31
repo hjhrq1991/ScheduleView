@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import com.wittyneko.schedule.R
 
@@ -24,6 +26,8 @@ class ScheduleCurrentTime : FrameLayout {
     val isShow get() = parent != null
 
     val timeView by lazy { findViewById<TextView>(R.id.tv_current_time) }
+    val point by lazy { findViewById<ImageView>(R.id.iv_point) }
+    val line by lazy { findViewById<View>(R.id.iv_line) }
 
     constructor(context: Context) : super(context) {
         init(context)

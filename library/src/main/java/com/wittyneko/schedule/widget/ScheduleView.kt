@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.*
+import android.view.View.OnClickListener
+import android.view.View.OnLongClickListener
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
@@ -69,17 +71,11 @@ class ScheduleView : FrameLayout {
 
     val topSpace = resources.idp(8)
     val bottomSpace = resources.idp(8)
-    val itemSpace = resources.idp(45)
-    val itemMarginStart = resources.idp(56)
-    val itemMarginEnd = resources.idp(15)
+
     val columnMargin = resources.idp(1)
-    val itemWidth get() = measuredWidth - itemMarginStart - itemMarginEnd + columnMargin
+    val itemWidth get() = measuredWidth - mDelegate.item_margin_start - mDelegate.item_margin_end + columnMargin
     val smoothScrollSpace = resources.idp(8) //每次滑动距离
     val timeTextoffset = resources.idp(7) // 隐藏时间距离偏移
-
-    val currentTimeColor = resources.color(R.color.color_F55656)
-    val bgTimeColor = resources.color(R.color.color_BCC1CD)
-
 
     val lineViewList = arrayListOf<View>()
     val timeViewList = arrayListOf<TextView>()
@@ -89,20 +85,84 @@ class ScheduleView : FrameLayout {
 
     val scrollView by lazy { parentAsView<NestedScrollView>() }
     val editView by lazy {
-        val view = layoutInterface.inflate(
-            R.layout.layout_schedule_item_edit, this, false
-        ) as ScheduleEdit
+        val view = layoutInterface.inflate(R.layout.layout_schedule_item_edit, this, false) as ScheduleEdit
         view.asLayoutParams<MarginLayoutParams>().bottomMargin = bottomSpace
         view.editTouchView.asLayoutParams<MarginLayoutParams>().apply {
-            marginStart = itemMarginStart.toInt()
-            marginEnd = itemMarginEnd.toInt()
+            view.editTouchView.background = mDelegate.edit_background
+            marginStart = mDelegate.edit_margin_start.toInt()
+            marginEnd = mDelegate.edit_margin_end.toInt()
         }
+
+        view.topPoint.asLayoutParams<MarginLayoutParams>().apply {
+            view.topPoint.background = mDelegate.edit_point_src
+            width = mDelegate.edit_point_size
+            height = mDelegate.edit_point_size
+            topMargin = - mDelegate.edit_point_size / 2
+        }
+        view.bottomPoint.asLayoutParams<MarginLayoutParams>().apply {
+            view.bottomPoint.background = mDelegate.edit_point_src
+            width = mDelegate.edit_point_size
+            height = mDelegate.edit_point_size
+            bottomMargin = - mDelegate.edit_point_size / 2
+        }
+
+        view.tvContent.apply {
+            this.setTextSize(TypedValue.COMPLEX_UNIT_PX, mDelegate.edit_text_size.toFloat())
+            this.setTextColor(mDelegate.edit_text_color)
+            this.asLayoutParams<MarginLayoutParams>().apply {
+                marginStart = mDelegate.edit_text_margin_start
+                topMargin = mDelegate.edit_text_margin_top
+                marginEnd = mDelegate.edit_text_margin_end
+                bottomMargin = mDelegate.edit_text_margin_bottom
+            }
+        }
+
+        view.startTimeView.apply {
+            this.setTextSize(TypedValue.COMPLEX_UNIT_PX, mDelegate.edit_start_text_size.toFloat())
+            this.setTextColor(mDelegate.edit_start_text_color)
+            this.asLayoutParams<MarginLayoutParams>().apply {
+                marginStart = mDelegate.edit_start_text_margin_start
+                topMargin = -mDelegate.edit_start_text_margin_top
+            }
+        }
+
+        view.endTimeView.apply {
+            this.setTextSize(TypedValue.COMPLEX_UNIT_PX, mDelegate.edit_end_text_size.toFloat())
+            this.setTextColor(mDelegate.edit_end_text_color)
+            this.asLayoutParams<MarginLayoutParams>().apply {
+                marginStart = mDelegate.edit_end_text_margin_start
+                bottomMargin = -mDelegate.edit_end_text_margin_bottom
+            }
+        }
+
         view
     }
     val currentTime by lazy {
-        layoutInterface.inflate(
-            R.layout.layout_schedule_current_time, this, false
-        ) as ScheduleCurrentTime
+        val view = layoutInterface.inflate(R.layout.layout_schedule_current_time, this, false) as ScheduleCurrentTime
+        view.timeView.apply {
+            this.setTextSize(TypedValue.COMPLEX_UNIT_PX, mDelegate.current_time_text_size.toFloat())
+            this.setTextColor(mDelegate.current_time_text_color)
+            this.asLayoutParams<MarginLayoutParams>().apply {
+                marginStart = mDelegate.current_time_text_margin_start
+            }
+        }
+        view.point.apply {
+            this.visibility = if (mDelegate.current_time_show_point) View.VISIBLE else View.GONE
+            this.background = mDelegate.current_time_point_src
+            this.asLayoutParams<MarginLayoutParams>().apply {
+                width = mDelegate.current_time_point_width
+                height = mDelegate.current_time_point_height
+                marginStart = mDelegate.current_time_point_margin_start
+            }
+        }
+        view.line.apply {
+            this.setBackgroundColor(mDelegate.current_time_line_src)
+            this.asLayoutParams<MarginLayoutParams>().apply {
+                marginStart = mDelegate.current_time_line_margin_start
+                marginEnd = mDelegate.current_time_line_margin_end
+            }
+        }
+        view
     }
 
     var selectedDate = LocalDate.now() //当前选中日期
@@ -110,7 +170,7 @@ class ScheduleView : FrameLayout {
 
     var itemLongClickListener = OnLongClickListener {
         //编辑Item
-        editItem(it.asView())
+        if (mDelegate.edit_enable) { editItem(it.asView()) }
         true
     }
 
@@ -149,53 +209,38 @@ class ScheduleView : FrameLayout {
 
     var onItemChangeListener: ((view: ScheduleItem, position: Int) -> Unit)? = null
 
-    constructor(context: Context) : super(context) {
-        init(context)
-    }
+    constructor(context: Context) : this(context, null)
 
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-        init(context, attrs)
-    }
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    ) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init(context, attrs, defStyleAttr)
     }
 
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int
-    ) : super(context, attrs, defStyleAttr, defStyleRes) {
-        init(context, attrs, defStyleAttr)
-    }
+    private val mDelegate = ScheduleDelegate.instance
 
     private fun init(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
+        attrs?.let {
+            mDelegate.initTypedArray(resources, context.obtainStyledAttributes(attrs, R.styleable.ScheduleView))
+        }
+
         clipChildren = false
         clipToPadding = false
         val lineHeight = resources.idp(1)
-        val textSize = resources.sp(12)
-        val textMarginStart = resources.idp(16)
-        val textMarginEnd = resources.idp(15)
 
         for (i in 0..24) {
             //添加时间线
             addView(View(context).also {
                 lineViewList.add(i, it)
-                it.setBackgroundResource(R.color.color_DCE0E8)
+                it.setBackgroundColor(mDelegate.time_line_src)
                 it.layoutParams = generateDefaultLayoutParams().also { layoutParams ->
                     layoutParams.height = lineHeight
-                    layoutParams.topMargin = itemSpace * i + topSpace
+                    layoutParams.topMargin = mDelegate.item_space * i + topSpace
                     if (i == 24) layoutParams.bottomMargin = bottomSpace
-                    layoutParams.marginStart = itemMarginStart.toInt()
-                    layoutParams.marginEnd = itemMarginEnd.toInt()
+                    layoutParams.marginStart = mDelegate.time_line_margin_start
+                    layoutParams.marginEnd = mDelegate.time_line_margin_end
                 }
             })
-
 
             addView(TextView(context).also {
                 timeViewList.add(i, it)
@@ -203,35 +248,23 @@ class ScheduleView : FrameLayout {
                     24 -> time24String
                     else -> zeroTime.plusHours(i).toString(timePattern)
                 }
-                it.setTextColor(bgTimeColor)
-                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+                it.setTextColor(mDelegate.time_text_color)
+                it.setTextSize(TypedValue.COMPLEX_UNIT_PX, mDelegate.time_text_size.toFloat())
                 it.layoutParams = generateDefaultLayoutParams().also { layoutParams ->
                     layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
                     layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-                    layoutParams.topMargin = itemSpace * i
-                    layoutParams.marginStart = textMarginStart
-                    layoutParams.marginEnd = textMarginEnd
+                    layoutParams.topMargin = mDelegate.item_space * i
+                    layoutParams.marginStart = mDelegate.time_text_margin_start
+                    layoutParams.marginEnd = mDelegate.time_line_margin_end
                 }
             })
         }
 
         addView(currentTime)
-
-        // 测试Item
-//        addItems(
-//            createItem(Period.hours(3), Period.hours(4)),
-//            createItem(Period.hours(3).withMinutes(30), Period.hours(4).withMinutes(30)),
-//            createItem(Period.hours(3).withMinutes(45), Period.hours(5)),
-//            createItem(Period.hours(5).withMinutes(30), Period.hours(7)),
-//            createItem(Period.hours(7), Period.hours(9)),
-//            createItem(Period.hours(7).withMinutes(8), Period.hours(9))
-//        )
     }
 
     override fun onAttachedToWindow() {
-        post {
-            refreshTime()
-        }
+        post { refreshTime() }
         super.onAttachedToWindow()
     }
 
@@ -381,10 +414,10 @@ class ScheduleView : FrameLayout {
                         if (autoScroll != AutoScroll.IDLE || Math.abs(betweenY) > viewConfiguration.scaledTouchSlop) {
 
                             val scrollFrame = scrollView.visibleOnScreen
-                            val outsideTop = event.rawY - scrollFrame.top < itemSpace + topSpace
+                            val outsideTop = event.rawY - scrollFrame.top < mDelegate.item_space + topSpace
                             val canScrollTop = scrollView.canScrollVertically(-1) && outsideTop
                             val outsideBottom =
-                                scrollFrame.bottom - event.rawY < itemSpace + bottomSpace
+                                scrollFrame.bottom - event.rawY < mDelegate.item_space + bottomSpace
                             val canScrollBottom = scrollView.canScrollVertically(1) && outsideBottom
                             autoScroll = when {
                                 !outsideTop && !outsideBottom -> AutoScroll.IDLE
@@ -425,9 +458,11 @@ class ScheduleView : FrameLayout {
                         cancelClickListener.onClick(this)
                     }
                 } else {
-                    val start = distanceToTime(mLastFocusY).round().takeIf { it.hours < 23 }
-                        ?: Period.hours(23)
-                    if (!isRemoveItem) showEdit(start)
+                    if (!isRemoveItem && mDelegate.edit_enable) {
+                        val start = distanceToTime(mLastFocusY).round().takeIf { it.hours < 23 }
+                            ?: Period.hours(23)
+                        showEdit(start)
+                    }
                 }
             }
         }
@@ -445,7 +480,6 @@ class ScheduleView : FrameLayout {
      * Date: 2020-08-07
      */
     fun scrollToCurTime() {
-
         val localTime = LocalTime(serviceTime)
         val hour = Math.max(localTime.hourOfDay - 1, 0)
         val localPeriod = Period.hours(hour)
@@ -465,7 +499,6 @@ class ScheduleView : FrameLayout {
      * @param endPeriod Period
      */
     fun showEdit(startPeriod: Period, endPeriod: Period = startPeriod.plusHours(1)) {
-
         editView.startPeriod = startPeriod
         editView.endPeriod = endPeriod
         editView.updateLayoutParams()
@@ -502,7 +535,6 @@ class ScheduleView : FrameLayout {
             requestLayout()
         }
     }
-
 
     fun cancelEdit() {
         itemEditView = null
@@ -613,6 +645,25 @@ class ScheduleView : FrameLayout {
         item.setOnLongClickListener(itemLongClickListener)
         item.setOnClickListener(itemClickListener)
         //item.updateLayoutParams()
+
+        item.background = mDelegate.item_background
+
+        item.ivLeft.apply {
+            this.visibility = if (mDelegate.item_show_left_icon) View.VISIBLE else View.GONE
+            this.background = mDelegate.item_left_icon_src
+        }
+
+        item.tvContent.apply {
+            this.setTextSize(TypedValue.COMPLEX_UNIT_PX, mDelegate.item_text_size.toFloat())
+            this.setTextColor(mDelegate.item_text_color)
+            this.asLayoutParams<MarginLayoutParams>().apply {
+                marginStart = mDelegate.item_text_margin_start
+                topMargin = mDelegate.item_text_margin_top
+                marginEnd = mDelegate.item_text_margin_end
+                bottomMargin = mDelegate.item_text_margin_bottom
+            }
+        }
+
         item
     }
 
@@ -626,13 +677,12 @@ class ScheduleView : FrameLayout {
      * @return Period
      */
     fun distanceToTime(dist: Float, offset: Int = topSpace) = run {
-        val time = (dist - offset) / itemSpace
+        val time = (dist - offset) / mDelegate.item_space
         val hour = time.toInt()
         val minute = ((time - hour) * 60).toInt()
         //LocalTime(hour, minute)
 
         Period(hour, minute, 0, 0)
-
     }
 
     /**
@@ -645,7 +695,7 @@ class ScheduleView : FrameLayout {
      * @return Float
      */
     fun timeToDistance(time: Period, offset: Int = topSpace) = run {
-        time.hours * itemSpace + time.minutes / 60f * itemSpace + offset
+        time.hours * mDelegate.item_space + time.minutes / 60f * mDelegate.item_space + offset
     }
 
     /**
@@ -653,10 +703,11 @@ class ScheduleView : FrameLayout {
      * <p>
      * Author: wittyneko
      * Date: 2020-07-23
+     * @param round 最小时间，默认为15分钟
      * @receiver Period
      * @return Period
      */
-    fun Period.round(round: Int = 15): Period {
+    fun Period.round(round: Int = mDelegate.min_minute): Period {
         return withMinutes(minutes / round * round)
     }
 
@@ -752,7 +803,6 @@ class ScheduleView : FrameLayout {
                     break
                 }
             }
-
         }
 
         /**
@@ -799,7 +849,6 @@ class ScheduleView : FrameLayout {
                 }
             }
         }
-
     }
 
     /**
@@ -816,7 +865,7 @@ class ScheduleView : FrameLayout {
         //layoutParams.marginStart = itemMarginStart.toInt()
         //layoutParams.marginEnd = itemMarginEnd.toInt()
         val width = itemWidth * columnMeasureWidth
-        layoutParams.marginStart = (itemMarginStart + itemWidth * columnMeasureStart).toInt()
+        layoutParams.marginStart = (mDelegate.item_margin_start + itemWidth * columnMeasureStart).toInt()
         layoutParams.width = (itemWidth * columnMeasureWidth - columnMargin).toInt()
     }
 
@@ -853,26 +902,29 @@ class ScheduleView : FrameLayout {
         val localPeriod = Period(localTime.hourOfDay, localTime.minuteOfHour, 0, 0)
         val local = localPeriod.toStandardDuration()
         val isToady = selectedDate == LocalDate(serviceTime)
-        itemViewList.forEach { item ->
-            val start = item.startPeriod.toStandardDuration()
-            val end = item.endPeriod.toStandardDuration()
-            val (bg, left, color) = when {
-                isToady && local > end -> Triple(
-                    R.drawable.bg_schedule_item_past,
-                    R.drawable.bg_schedule_item_past_left, R.color.color_BCC1CD
-                )
-                isToady && local in item.run { start..end } -> Triple(
-                    R.drawable.bg_schedule_item_now,
-                    R.drawable.bg_schedule_item_now_left, R.color.color_2A2F3C
-                )
-                else -> Triple(
-                    R.drawable.bg_schedule_item_future,
-                    R.drawable.bg_schedule_item_future_left, R.color.color_2A2F3C
-                )
+        mDelegate.item_end_mode.takeIf { it == ScheduleDelegate.ITEM_END_MODE_DEFAULT }?.let {
+            //默认情况根据当前时间处理
+            itemViewList.forEach { item ->
+                val start = item.startPeriod.toStandardDuration()
+                val end = item.endPeriod.toStandardDuration()
+                val (bg, left, color) = when {
+                    isToady && local > end -> Triple(
+                        mDelegate.item_end_background, mDelegate.item_end_left_icon_src,
+                        mDelegate.item_end_text_color
+                    )
+                    isToady && local in item.run { start..end } -> Triple(
+                        mDelegate.item_background, mDelegate.item_left_icon_src,
+                        mDelegate.item_text_color
+                    )
+                    else -> Triple(
+                        mDelegate.item_background, mDelegate.item_left_icon_src,
+                        mDelegate.item_text_color
+                    )
+                }
+                item.background = bg
+                item.ivLeft.background = left
+                item.tvContent.setTextColor(color)
             }
-            item.setBackgroundResource(bg)
-            item.ivLeft.setBackgroundResource(left)
-            item.tvContent.setTextColor(context.color(color))
         }
         val curY = timeToDistance(localPeriod) - measuredHeight / 2
         if (translationY != curY) {
@@ -907,7 +959,7 @@ class ScheduleView : FrameLayout {
         val curVisible = curTop in startRange || curBottom in startRange
                 || curTop in endRange || curBottom in endRange
         //currentTime.timeView.visibility = if (curVisible) View.INVISIBLE else View.VISIBLE
-        currentTime.timeView.setTextColor(if (curVisible) Color.TRANSPARENT else currentTimeColor)
+        currentTime.timeView.setTextColor(if (curVisible) Color.TRANSPARENT else mDelegate.current_time_text_color)
 
         // 背景时间隐藏
         timeViewList.forEach {
@@ -923,9 +975,8 @@ class ScheduleView : FrameLayout {
                 val isCurVisible = currentTime.isShow && currentTime.visibility == View.VISIBLE
                 if (inCurRange && isCurVisible) View.INVISIBLE else View.VISIBLE
             }
-            it.setTextColor(if (visibility != View.VISIBLE) Color.TRANSPARENT else bgTimeColor)
+            it.setTextColor(if (visibility != View.VISIBLE) Color.TRANSPARENT else mDelegate.time_text_color)
         }
-
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -946,7 +997,6 @@ class ScheduleView : FrameLayout {
 
     fun notifyAllItem() {
         mAdapter?.also { adapter ->
-
             for (position in 0 until adapter.getItemCount()) {
                 val item = adapter.getItem(position)
                 val view = itemViewList.getOrNull(position)
@@ -982,7 +1032,7 @@ class ScheduleView : FrameLayout {
         var viewList: MutableList<ScheduleItem>
     )
 
-    abstract class Adapter<T> {
+    abstract class Adapter<T>() {
         abstract fun getItemCount(): Int
 
         abstract fun getItem(position: Int): T

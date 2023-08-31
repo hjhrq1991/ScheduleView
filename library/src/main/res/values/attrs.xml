@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ScheduleView">
+        <attr name="min_minute" format="integer" /> <!--最小时间，单位分钟，默认15分钟-->
+
+        <attr name="item_space" format="dimension" /><!--每小时高度-->
+        <attr name="item_margin_start" format="dimension" /><!--左边距-->
+        <attr name="item_margin_end" format="dimension" /><!--右边距-->
+
+        <attr name="item_background" format="reference|color" /><!--计划项背景-->
+        <attr name="item_text_color" format="color" /><!--计划项字体颜色-->
+        <attr name="item_text_size" format="dimension" /><!--计划项字体大小-->
+        <attr name="item_text_margin_start" format="dimension" /><!--计划项字体左边距-->
+        <attr name="item_text_margin_top" format="dimension" /><!--计划项字体上边距-->
+        <attr name="item_text_margin_end" format="dimension" /><!--计划项字体右边距-->
+        <attr name="item_text_margin_bottom" format="dimension" /><!--计划项字体下边距-->
+        <attr name="item_show_left_icon" format="boolean" /><!--计划项是否左边icon-->
+        <attr name="item_left_icon_src" format="reference|color" /><!--计划项左边icon资源-->
+
+        <attr name="item_end_mode" format="enum"><!--完结计划 模式-->
+            <enum name="mode_default" value="0" /><!--按当前时间-->
+            <enum name="mode_user_set" value="1" /><!--用户自行设置-->
+        </attr>
+        <attr name="item_end_background" format="reference|color" /><!--完结 计划项背景-->
+        <attr name="item_end_text_color" format="color" /><!--完结 计划项字体颜色-->
+        <attr name="item_end_left_icon_src" format="reference|color" /><!--完结 计划项左边icon资源-->
+
+        <attr name="edit_enable" format="boolean" /><!--是否允许编辑、新建-->
+        <attr name="edit_background" format="reference|color" /><!--编辑背景-->
+        <attr name="edit_margin_start" format="dimension" /><!--编辑左边距-->
+        <attr name="edit_margin_end" format="dimension" /><!--编辑右边距-->
+        <attr name="edit_point_size" format="dimension" /><!--编辑圆点大小-->
+        <attr name="edit_point_src" format="reference|color" /><!--编辑圆点资源-->
+        <attr name="edit_text_color" format="color" /><!--编辑框字体颜色-->
+        <attr name="edit_text_size" format="dimension" /><!--编辑框字体大小-->
+        <attr name="edit_text_margin_start" format="dimension" /><!--编辑框左边距-->
+        <attr name="edit_text_margin_top" format="dimension" /><!--编辑框上边距-->
+        <attr name="edit_text_margin_end" format="dimension" /><!--编辑框右边距-->
+        <attr name="edit_text_margin_bottom" format="dimension" /><!--编辑框下边距-->
+        <attr name="edit_start_text_color" format="color" /><!--起始时间字体颜色-->
+        <attr name="edit_start_text_size" format="dimension" /><!--起始时间字体大小-->
+        <attr name="edit_start_text_margin_start" format="dimension" /><!--起始时间左边距-->
+        <attr name="edit_start_text_margin_top" format="dimension" /><!--起始时间上边距-->
+        <attr name="edit_end_text_color" format="color" /><!--结束时间字体颜色-->
+        <attr name="edit_end_text_size" format="dimension" /><!--结束时间字体大小-->
+        <attr name="edit_end_text_margin_start" format="dimension" /><!--结束时间左边距-->
+        <attr name="edit_end_text_margin_bottom" format="dimension" /><!--结束时间下边距-->
+
+        <attr name="current_time_text_color" format="color" /><!--当前时间字体颜色-->
+        <attr name="current_time_text_size" format="dimension" /><!--当前时间字体大小-->
+        <attr name="current_time_text_margin_start" format="dimension" /><!--当前时间字体左边距-->
+        <attr name="current_time_show_point" format="boolean" /><!--当前时间是否显示小圆点-->
+        <attr name="current_time_point_src" format="reference|color" /><!--当前时间小圆点资源-->
+        <attr name="current_time_point_width" format="dimension" /><!--当前时间小圆点宽度-->
+        <attr name="current_time_point_height" format="dimension" /><!--当前时间小圆点高度-->
+        <attr name="current_time_point_margin_start" format="dimension" /><!--当前时间小圆点左边距-->
+        <attr name="current_time_line_margin_start" format="dimension" /><!--当前时间线左边距-->
+        <attr name="current_time_line_margin_end" format="dimension" /><!--当前时间线右边距-->
+        <attr name="current_time_line_src" format="color" /><!--当前时间线资源-->
+
+        <attr name="time_text_color" format="color" /><!--时间字体颜色-->
+        <attr name="time_text_size" format="dimension" /><!--时间字体大小-->
+        <attr name="time_text_margin_start" format="dimension" /><!--时间字体左边距-->
+        <attr name="time_line_margin_start" format="dimension" /><!--时间线左边距-->
+        <attr name="time_line_margin_end" format="dimension" /><!--时间线右边距-->
+        <attr name="time_line_src" format="color" /><!--时间线资源-->
+    </declare-styleable>
+</resources>
