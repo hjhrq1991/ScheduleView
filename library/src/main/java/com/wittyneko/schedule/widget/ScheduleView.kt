@@ -10,6 +10,7 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import androidx.core.widget.NestedScrollView
 import com.wittyneko.schedule.R
 import com.wittyneko.schedule.extensions.*
@@ -54,6 +55,11 @@ class ScheduleView : FrameLayout {
 
     enum class AutoScroll { IDLE, TOP, BOTTOM }
 
+    var showCurrentTime = true//显示当前时间
+    set(value) {
+        field = value
+        currentTime.visibility = if (value) View.VISIBLE else View.GONE
+    }
     var onlyTodayShowCurrentTime = false //只在今天显示当前时间
     var timeOffset = 0L //服务器时间偏移量
     val serviceTime get() = System.currentTimeMillis() - timeOffset //服务器时间
