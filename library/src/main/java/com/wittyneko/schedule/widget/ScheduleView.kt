@@ -893,6 +893,7 @@ class ScheduleView : FrameLayout {
             endPeriod.toStandardDuration() == duration24 -> time24String
             else -> endTime.toString(timePattern)
         }
+        updatCurrentTime()
         updateTimeVisible()
     }
 
@@ -933,6 +934,7 @@ class ScheduleView : FrameLayout {
             }
         }
         val curY = timeToDistance(localPeriod) - measuredHeight / 2
+        updatCurrentTime()
         if (translationY != curY) {
             translationY = curY
             currentTime.timeView.text = localTime.toString(timePattern)
@@ -948,6 +950,10 @@ class ScheduleView : FrameLayout {
         //layoutParams.resolveLayoutDirection(layoutDirection)
     }
 
+    private fun updatCurrentTime() {
+        showCurrentTime.takeIf { it }?.let { currentTime.visibility = View.VISIBLE } ?: run { currentTime.visibility = View.GONE }
+    }
+
     /**
      * Desc: 隐藏重叠时间
      * <p>
@@ -955,33 +961,35 @@ class ScheduleView : FrameLayout {
      * Date: 2020-07-27
      */
     fun updateTimeVisible() {
-        val startRange = editView.startTimeView.frameOnScreen.run { top..bottom }
-        val endRange = editView.endTimeView.frameOnScreen.run { top..bottom }
-        val curFrame = currentTime.timeView.frameOnScreen
+        currentTime.timeView.post {
+            val startRange = editView.startTimeView.frameOnScreen.run { top..bottom }
+            val endRange = editView.endTimeView.frameOnScreen.run { top..bottom }
+            val curFrame = currentTime.timeView.frameOnScreen
 
-        val curRange = curFrame.run { top..bottom }
-        val curTop = curFrame.top + timeTextoffset
-        val curBottom = curFrame.bottom - timeTextoffset
-        val curVisible = curTop in startRange || curBottom in startRange
-                || curTop in endRange || curBottom in endRange
-        //currentTime.timeView.visibility = if (curVisible) View.INVISIBLE else View.VISIBLE
-        currentTime.timeView.setTextColor(if (curVisible) Color.TRANSPARENT else mDelegate.current_time_text_color)
+            val curRange = curFrame.run { top..bottom }
+            val curTop = curFrame.top + timeTextoffset
+            val curBottom = curFrame.bottom - timeTextoffset
+            val curVisible = curTop in startRange || curBottom in startRange
+                    || curTop in endRange || curBottom in endRange
+            //currentTime.timeView.visibility = if (curVisible) View.INVISIBLE else View.VISIBLE
+            currentTime.timeView.setTextColor(if (curVisible) Color.TRANSPARENT else mDelegate.current_time_text_color)
 
-        // 背景时间隐藏
-        timeViewList.forEach {
-            val frame = it.frameOnScreen
-            frame.top += timeTextoffset
-            frame.bottom -= timeTextoffset
-            // 判断是否和编辑编辑区域重叠
-            val inRange = frame.top in startRange || frame.bottom in startRange
-                    || frame.top in endRange || frame.bottom in endRange
-            val visibility = if (inRange && editView.isShow) View.INVISIBLE else {
-                // 判断当前时间区域重叠
-                val inCurRange = frame.top in curRange || frame.bottom in curRange
-                val isCurVisible = currentTime.isShow && currentTime.visibility == View.VISIBLE
-                if (inCurRange && isCurVisible) View.INVISIBLE else View.VISIBLE
+            // 背景时间隐藏
+            timeViewList.forEach {
+                val frame = it.frameOnScreen
+                frame.top += timeTextoffset
+                frame.bottom -= timeTextoffset
+                // 判断是否和编辑编辑区域重叠
+                val inRange = frame.top in startRange || frame.bottom in startRange
+                        || frame.top in endRange || frame.bottom in endRange
+                val visibility = if (inRange && editView.isShow) View.INVISIBLE else {
+                    // 判断当前时间区域重叠
+                    val inCurRange = frame.top in curRange || frame.bottom in curRange
+                    val isCurVisible = currentTime.isShow && currentTime.visibility == View.VISIBLE
+                    if (inCurRange && isCurVisible) View.INVISIBLE else View.VISIBLE
+                }
+                it.setTextColor(if (visibility != View.VISIBLE) Color.TRANSPARENT else mDelegate.time_text_color)
             }
-            it.setTextColor(if (visibility != View.VISIBLE) Color.TRANSPARENT else mDelegate.time_text_color)
         }
     }
 
