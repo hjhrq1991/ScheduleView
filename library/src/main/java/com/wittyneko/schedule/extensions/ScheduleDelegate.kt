@@ -78,6 +78,7 @@ class ScheduleDelegate {
     var current_time_point_width: Int = 0
     var current_time_point_height: Int = 0
     var current_time_point_margin_start: Int = 0
+    var current_time_line_height: Int = 0
     var current_time_line_margin_start: Int = 0
     var current_time_line_margin_end: Int = 0
     var current_time_line_src: Int = 0
@@ -85,6 +86,7 @@ class ScheduleDelegate {
     var time_text_color: Int = 0
     var time_text_size: Int = 0
     var time_text_margin_start: Int = 0
+    var time_line_height: Int = 0
     var time_line_margin_start: Int = 0
     var time_line_margin_end: Int = 0
     var time_line_src: Int = 0
@@ -147,12 +149,14 @@ class ScheduleDelegate {
         current_time_point_width = resources.idp(6)
         current_time_point_height = resources.idp(6)
         current_time_point_margin_start = resources.idp(48)
+        current_time_line_height = resources.idp(1)
         current_time_line_margin_start = resources.idp(50)
         current_time_line_margin_end = resources.idp(15)
         current_time_line_src = resources.color(R.color.color_F55656)
 
         time_text_color = resources.color(R.color.color_BCC1CD)
         time_text_size = resources.isp(12)
+        time_line_height = resources.isp(1)
         time_text_margin_start = resources.idp(16)
         time_line_margin_start = resources.idp(56)
         time_line_margin_end = resources.idp(15)
@@ -213,6 +217,7 @@ class ScheduleDelegate {
         current_time_point_width = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_width, current_time_point_width)
         current_time_point_height = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_height, current_time_point_height)
         current_time_point_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_margin_start, current_time_point_margin_start)
+        current_time_line_height = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_height, current_time_line_height)
         current_time_line_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_margin_start, current_time_line_margin_start)
         current_time_line_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_margin_end, current_time_line_margin_end)
         current_time_line_src = typedArray.getColor(R.styleable.ScheduleView_current_time_line_src, current_time_line_src)
@@ -220,6 +225,7 @@ class ScheduleDelegate {
         time_text_color = typedArray.getColor(R.styleable.ScheduleView_time_text_color, time_text_color)
         time_text_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_text_size, time_text_size)
         time_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_text_margin_start, time_text_margin_start)
+        time_line_height = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_line_height, time_line_height)
         time_line_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_line_margin_start, time_line_margin_start)
         time_line_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_line_margin_end, time_line_margin_end)
         time_line_src = typedArray.getColor(R.styleable.ScheduleView_time_line_src, time_line_src)

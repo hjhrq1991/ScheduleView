@@ -164,6 +164,7 @@ class ScheduleView : FrameLayout {
         view.line.apply {
             this.setBackgroundColor(mDelegate.current_time_line_src)
             this.asLayoutParams<MarginLayoutParams>().apply {
+                height = mDelegate.current_time_line_height
                 marginStart = mDelegate.current_time_line_margin_start
                 marginEnd = mDelegate.current_time_line_margin_end
             }
@@ -232,7 +233,6 @@ class ScheduleView : FrameLayout {
 
         clipChildren = false
         clipToPadding = false
-        val lineHeight = resources.idp(1)
 
         for (i in 0..24) {
             //添加时间线
@@ -240,7 +240,7 @@ class ScheduleView : FrameLayout {
                 lineViewList.add(i, it)
                 it.setBackgroundColor(mDelegate.time_line_src)
                 it.layoutParams = generateDefaultLayoutParams().also { layoutParams ->
-                    layoutParams.height = lineHeight
+                    layoutParams.height = mDelegate.time_line_height
                     layoutParams.topMargin = mDelegate.item_space * i + topSpace
                     if (i == 24) layoutParams.bottomMargin = bottomSpace
                     layoutParams.marginStart = mDelegate.time_line_margin_start

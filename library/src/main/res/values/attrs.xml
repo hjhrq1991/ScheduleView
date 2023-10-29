@@ -55,6 +55,7 @@
         <attr name="current_time_point_width" format="dimension" /><!--当前时间小圆点宽度-->
         <attr name="current_time_point_height" format="dimension" /><!--当前时间小圆点高度-->
         <attr name="current_time_point_margin_start" format="dimension" /><!--当前时间小圆点左边距-->
+        <attr name="current_time_line_height" format="dimension" /><!--当前时间线高度-->
         <attr name="current_time_line_margin_start" format="dimension" /><!--当前时间线左边距-->
         <attr name="current_time_line_margin_end" format="dimension" /><!--当前时间线右边距-->
         <attr name="current_time_line_src" format="color" /><!--当前时间线资源-->
@@ -62,6 +63,7 @@
         <attr name="time_text_color" format="color" /><!--时间字体颜色-->
         <attr name="time_text_size" format="dimension" /><!--时间字体大小-->
         <attr name="time_text_margin_start" format="dimension" /><!--时间字体左边距-->
+        <attr name="time_line_height" format="dimension" /><!--时间线高度-->
         <attr name="time_line_margin_start" format="dimension" /><!--时间线左边距-->
         <attr name="time_line_margin_end" format="dimension" /><!--时间线右边距-->
         <attr name="time_line_src" format="color" /><!--时间线资源-->
