@@ -128,7 +128,7 @@ class ScheduleView : FrameLayout {
             this.setTextColor(mDelegate.edit_start_text_color)
             this.asLayoutParams<MarginLayoutParams>().apply {
                 marginStart = mDelegate.edit_start_text_margin_start
-                topMargin = -mDelegate.edit_start_text_margin_top
+                topMargin = mDelegate.edit_start_text_margin_top
             }
         }
 

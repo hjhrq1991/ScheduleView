@@ -410,7 +410,7 @@ class ScheduleDelegate {
         edit_end_text_color = resources.color(R.color.color_A0006B14)
         edit_end_text_size = resources.isp(12)
         edit_end_text_margin_start = resources.idp(16)
-        edit_end_text_margin_bottom = resources.idp(-8)
+        edit_end_text_margin_bottom = resources.idp(8)
 
         current_time_text_color = resources.color(R.color.color_F55656)
         current_time_text_size = resources.isp(12)
