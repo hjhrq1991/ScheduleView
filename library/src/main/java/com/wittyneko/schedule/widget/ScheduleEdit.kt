@@ -39,6 +39,8 @@ class ScheduleEdit : FrameLayout {
 
     val isShow get() = parent != null
 
+    var isAdd = false
+
     val editTouchView by lazy { findViewById<View>(R.id.edit_touch) }
     val topPoint by lazy { findViewById<ImageView>(R.id.top_point) }
     val topTouchView by lazy { findViewById<View>(R.id.top_touch) }

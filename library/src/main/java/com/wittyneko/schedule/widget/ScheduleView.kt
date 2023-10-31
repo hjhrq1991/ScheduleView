@@ -177,7 +177,13 @@ class ScheduleView : FrameLayout {
 
     var itemLongClickListener = OnLongClickListener {
         //编辑Item
-        if (mDelegate.edit_enable) { editItem(it.asView()) }
+        if (mDelegate.edit_enable) {
+            editItem(it.asView())
+            editView.isAdd = false
+            mDelegate.edit_modify_date_vibrate_enable.takeIf { it }?.let {
+                VibrateUtils.vibrate(context, mDelegate.vibrate_time)
+            }
+        }
         true
     }
 
@@ -224,7 +230,12 @@ class ScheduleView : FrameLayout {
         init(context, attrs, defStyleAttr)
     }
 
-    private val mDelegate = ScheduleDelegate.instance
+    private val mDelegate = ScheduleDelegate()
+
+    /**
+     * 获取属性，可按需设置
+     */
+    fun getDelegate() = mDelegate
 
     private fun init(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
         attrs?.let {
@@ -400,7 +411,7 @@ class ScheduleView : FrameLayout {
                             }
                             // 调整时间段
                             editView.isItemTouch -> {
-                                var startPeriod = (editView.editStartPeriod + betweenTime).round()
+                                val startPeriod = (editView.editStartPeriod + betweenTime).round()
                                 val diff = startPeriod - editView.editStartPeriod
                                 val endPeriod = editView.editEndPeriod + diff
 
@@ -411,6 +422,13 @@ class ScheduleView : FrameLayout {
                                     editView.endPeriod = endPeriod
                                 }
                             }
+                        }
+
+
+                        if (editView.isAdd && mDelegate.append_modify_date_vibrate_enable) {
+                            VibrateUtils.vibrate(context, mDelegate.vibrate_time)
+                        } else  if (!editView.isAdd && mDelegate.edit_modify_date_vibrate_enable) {
+                            VibrateUtils.vibrate(context, mDelegate.vibrate_time)
                         }
 
                         editView.updateLayoutParams()
@@ -450,6 +468,7 @@ class ScheduleView : FrameLayout {
                 mLastFocusRawY = event.rawY
             }
             MotionEvent.ACTION_UP -> {
+                VibrateUtils.cancelVibrate(context)
 
                 mLastFocusX = event.x
                 mLastFocusY = event.y
@@ -468,6 +487,10 @@ class ScheduleView : FrameLayout {
                         val start = distanceToTime(mLastFocusY).round().takeIf { it.hours < 23 }
                             ?: Period.hours(23)
                         showEdit(start)
+                        editView.isAdd = true
+                        mDelegate.append_vibrate_enable.takeIf { it }?.let {
+                            VibrateUtils.vibrate(context, mDelegate.vibrate_time)
+                        }
                     }
                 }
             }
@@ -893,7 +916,7 @@ class ScheduleView : FrameLayout {
             endPeriod.toStandardDuration() == duration24 -> time24String
             else -> endTime.toString(timePattern)
         }
-        updatCurrentTime()
+        updateCurrentTime()
         updateTimeVisible()
     }
 
@@ -934,7 +957,7 @@ class ScheduleView : FrameLayout {
             }
         }
         val curY = timeToDistance(localPeriod) - measuredHeight / 2
-        updatCurrentTime()
+        updateCurrentTime()
         if (translationY != curY) {
             translationY = curY
             currentTime.timeView.text = localTime.toString(timePattern)
@@ -950,7 +973,7 @@ class ScheduleView : FrameLayout {
         //layoutParams.resolveLayoutDirection(layoutDirection)
     }
 
-    private fun updatCurrentTime() {
+    private fun updateCurrentTime() {
         showCurrentTime.takeIf { it }?.let { currentTime.visibility = View.VISIBLE } ?: run { currentTime.visibility = View.GONE }
     }
 
