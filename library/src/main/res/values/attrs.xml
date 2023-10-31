@@ -37,6 +37,8 @@
         <attr name="edit_margin_end" format="dimension" /><!--编辑右边距-->
         <attr name="edit_point_size" format="dimension" /><!--编辑圆点大小-->
         <attr name="edit_point_src" format="reference|color" /><!--编辑圆点资源-->
+        <attr name="edit_point_margin_start" format="dimension" /><!--编辑圆点左间距-->
+        <attr name="edit_point_margin_end" format="dimension" /><!--编辑圆点右间距-->
         <attr name="edit_text_color" format="color" /><!--编辑框字体颜色-->
         <attr name="edit_text_size" format="dimension" /><!--编辑框字体大小-->
         <attr name="edit_text_margin_start" format="dimension" /><!--编辑框左边距-->

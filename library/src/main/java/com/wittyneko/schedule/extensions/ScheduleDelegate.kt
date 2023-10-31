@@ -193,6 +193,12 @@ class ScheduleDelegate {
     lateinit var edit_point_src: Drawable
 
     /**
+     * 编辑框圆点边距
+     */
+    var edit_point_margin_start: Int = 0
+    var edit_point_margin_end: Int = 0
+
+    /**
      * 编辑框文本颜色
      */
     var edit_text_color: Int = 0
@@ -397,6 +403,9 @@ class ScheduleDelegate {
         edit_margin_end = resources.idp(15)
         edit_point_size = resources.idp(6)
         edit_point_src = resources.drawable(R.drawable.bg_schedule_point_edit)
+        edit_point_margin_start = resources.idp(28)
+        edit_point_margin_end = resources.idp(28)
+
         edit_text_color = resources.color(R.color.color_FFFFFF)
         edit_text_size = resources.isp(12)
         edit_text_margin_start = resources.idp(7)
@@ -524,6 +533,9 @@ class ScheduleDelegate {
         edit_point_src =
             typedArray.getDrawable(R.styleable.ScheduleView_edit_point_src).takeIf { it != null }
                 ?: edit_point_src
+        edit_point_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_point_margin_start, edit_point_margin_start)
+        edit_point_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_point_margin_end, edit_point_margin_end)
+
         edit_text_color =
             typedArray.getColor(R.styleable.ScheduleView_edit_text_color, edit_text_color)
         edit_text_size = typedArray.getDimensionPixelSize(

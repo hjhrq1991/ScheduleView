@@ -46,7 +46,7 @@
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="-15dp" />
 
-        <EditText
+        <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -59,7 +59,7 @@
             android:minWidth="100dp"
             android:textColor="@color/color_FFFFFF"
             android:textSize="12sp"
-            tools:text="文本示范1文本示范1文本示范1文本示范1" />
+            tools:text="日常" />
     </FrameLayout>
 
     <TextView

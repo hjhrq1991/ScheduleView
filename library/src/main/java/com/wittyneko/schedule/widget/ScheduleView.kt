@@ -103,12 +103,16 @@ class ScheduleView : FrameLayout {
             view.topPoint.setImageDrawable(mDelegate.edit_point_src)
             width = mDelegate.edit_point_size
             height = mDelegate.edit_point_size
+
+            leftMargin = mDelegate.edit_point_margin_start
             topMargin = - mDelegate.edit_point_size / 2
         }
         view.bottomPoint.asLayoutParams<MarginLayoutParams>().apply {
             view.bottomPoint.setImageDrawable(mDelegate.edit_point_src)
             width = mDelegate.edit_point_size
             height = mDelegate.edit_point_size
+
+            rightMargin = mDelegate.edit_point_margin_end
             bottomMargin = - mDelegate.edit_point_size / 2
         }
 
