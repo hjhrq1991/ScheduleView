@@ -396,6 +396,7 @@ class ScheduleView : FrameLayout {
                                 if ((editView.endPeriod - startPeriod).toStandardDuration() >= durationItemMin
                                     && startPeriod.toStandardDuration() >= durationMin
                                 ) {
+                                    takeIf { editView.startPeriod != startPeriod }?.let { touchVibrate() }
                                     editView.startPeriod = startPeriod
                                 }
                             }
@@ -406,6 +407,7 @@ class ScheduleView : FrameLayout {
                                 if ((endPeriod - editView.startPeriod).toStandardDuration() >= durationItemMin
                                     && endPeriod.toStandardDuration() <= durationMax
                                 ) {
+                                    takeIf { editView.endPeriod != endPeriod }?.let { touchVibrate() }
                                     editView.endPeriod = endPeriod
                                 }
                             }
@@ -418,17 +420,12 @@ class ScheduleView : FrameLayout {
                                 if (startPeriod.toStandardDuration() >= durationMin
                                     && endPeriod.toStandardDuration() <= durationMax
                                 ) {
+                                    takeIf { editView.startPeriod != startPeriod && editView.endPeriod != endPeriod }?.let { touchVibrate() }
+
                                     editView.startPeriod = startPeriod
                                     editView.endPeriod = endPeriod
                                 }
                             }
-                        }
-
-
-                        if (editView.isAdd && mDelegate.append_modify_date_vibrate_enable) {
-                            VibrateUtils.vibrate(context, mDelegate.vibrate_time)
-                        } else  if (!editView.isAdd && mDelegate.edit_modify_date_vibrate_enable) {
-                            VibrateUtils.vibrate(context, mDelegate.vibrate_time)
                         }
 
                         editView.updateLayoutParams()
@@ -500,6 +497,17 @@ class ScheduleView : FrameLayout {
         //Log.e(event.run { "action $action, $consume, $x, $y ${editView.isItemTouch}, ${editView.isTopTouch}, ${editView.isBottomTouch}" })
 
         return consume.takeIf { it } ?: super.onTouchEvent(event)
+    }
+
+    /**
+     * 编辑状态震动
+     */
+    private fun touchVibrate() {
+        if (editView.isAdd && mDelegate.append_modify_date_vibrate_enable) {
+            VibrateUtils.vibrate(context, mDelegate.vibrate_time)
+        } else  if (!editView.isAdd && mDelegate.edit_modify_date_vibrate_enable) {
+            VibrateUtils.vibrate(context, mDelegate.vibrate_time)
+        }
     }
 
     /**
