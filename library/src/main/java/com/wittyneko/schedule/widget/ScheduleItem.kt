@@ -86,7 +86,7 @@ class ScheduleItem : FrameLayout {
             val maxLines = ((measuredHeight - lp.topMargin - lp.bottomMargin + textMargin) / textHeight).toInt()
 
             //以实际显示区域为准
-            this.maxLines = maxLines.takeIf { it <= this@ScheduleItem.maxLines } ?: this@ScheduleItem.maxLines
+            this.maxLines = this@ScheduleItem.maxLines.takeIf { it in 1..maxLines } ?: maxLines
         }
     }
 

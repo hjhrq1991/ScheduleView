@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
 import android.os.Vibrator
-import android.os.VibratorManager
 
 
 /**
@@ -45,7 +44,8 @@ object VibrateUtils {
      * 获取震动器
      */
     fun getVibrate(context: Context) = Build.VERSION.SDK_INT.takeIf { it >= 31 }?.let {
-        val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-        vibratorManager.defaultVibrator
+//        val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+//        vibratorManager.defaultVibrator
+        context.getSystemService(VIBRATOR_SERVICE) as Vibrator
     } ?: context.getSystemService(VIBRATOR_SERVICE) as Vibrator
 }
