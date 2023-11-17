@@ -78,7 +78,7 @@ class ScheduleView : FrameLayout {
     val topSpace = resources.idp(8)
     val bottomSpace = resources.idp(8)
 
-    val columnMargin = resources.idp(1)
+    var columnMargin = resources.idp(1)
     val itemWidth get() = measuredWidth - mDelegate.item_margin_start - mDelegate.item_margin_end + columnMargin
     val smoothScrollSpace = resources.idp(8) //每次滑动距离
     val timeTextoffset = resources.idp(7) // 隐藏时间距离偏移
