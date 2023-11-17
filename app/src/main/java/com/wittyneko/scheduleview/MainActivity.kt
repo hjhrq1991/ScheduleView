@@ -1,9 +1,9 @@
 package com.wittyneko.scheduleview
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.wittyneko.schedule.extensions.asView
 import com.wittyneko.schedule.widget.ScheduleEdit
 import com.wittyneko.schedule.widget.ScheduleItem
@@ -55,6 +55,8 @@ class MainActivity : AppCompatActivity() {
                 Triple(Period.hours(5).withMinutes(30), Period.hours(7), "日程4"),
                 Triple(Period.hours(7), Period.hours(9), "日程5"),
                 Triple(Period.hours(7).withMinutes(8), Period.hours(9), "日程6"),
+
+                Triple(Period.hours(14).withMinutes(0), Period.hours(14).withMinutes(59), "日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6日程6"),
             )
         )
     }
