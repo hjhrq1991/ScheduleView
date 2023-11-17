@@ -3,6 +3,7 @@ package com.wittyneko.schedule.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -41,6 +42,8 @@ class ScheduleItem : FrameLayout {
     val tvContent by lazy { findViewById<TextView>(R.id.tv_content) }
     val ivLeft by lazy { findViewById<ImageView>(R.id.iv_left) }
 
+    var maxLines = -1
+
     constructor(context: Context) : super(context) {
         init(context)
     }
@@ -69,11 +72,21 @@ class ScheduleItem : FrameLayout {
     private fun init(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) {
     }
 
+//    var textPath: Path = Path()
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         tvContent.apply {
             //Log.e("text " + run { "$measuredHeight, ${layout.height}, ${layout.lineCount}, $lineHeight, $lineSpacingExtra $lineSpacingMultiplier \n" })
-            maxLines = measuredHeight / lineHeight
+            val lp = this.layoutParams as FrameLayout.LayoutParams
+            val fm = paint.fontMetrics
+            val textHeight = fm.bottom - fm.top + fm.leading
+            val textMargin = textHeight - lineHeight
+            //用可用高度来测算可现实的真实行数
+            val maxLines = ((measuredHeight - lp.topMargin - lp.bottomMargin + textMargin) / textHeight).toInt()
+
+            //以实际显示区域为准
+            this.maxLines = maxLines.takeIf { it <= this@ScheduleItem.maxLines } ?: this@ScheduleItem.maxLines
         }
     }
 

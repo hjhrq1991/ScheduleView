@@ -10,6 +10,9 @@
         <attr name="item_background" format="reference|color" /><!--计划项背景-->
         <attr name="item_text_color" format="color" /><!--计划项字体颜色-->
         <attr name="item_text_size" format="dimension" /><!--计划项字体大小-->
+
+        <attr name="item_text_max_lines" format="integer"/><!--文本最大行数，默认为view可显示区域，当设置时，显示区域可显示行数小雨设置值时按显示区域-->
+
         <attr name="item_text_margin_start" format="dimension" /><!--计划项字体左边距-->
         <attr name="item_text_margin_top" format="dimension" /><!--计划项字体上边距-->
         <attr name="item_text_margin_end" format="dimension" /><!--计划项字体右边距-->

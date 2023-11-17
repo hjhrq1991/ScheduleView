@@ -10,7 +10,6 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.core.view.isInvisible
 import androidx.core.widget.NestedScrollView
 import com.wittyneko.schedule.R
 import com.wittyneko.schedule.extensions.*
@@ -35,6 +34,7 @@ import org.joda.time.Period
  * Author: wittyneko
  */
 class ScheduleView : FrameLayout {
+    val TAG = "hrq===112233"
 
     private var mLastFocusX = 0f
     private var mLastFocusY = 0f
@@ -94,13 +94,13 @@ class ScheduleView : FrameLayout {
         val view = layoutInterface.inflate(R.layout.layout_schedule_item_edit, this, false) as ScheduleEdit
         view.asLayoutParams<MarginLayoutParams>().bottomMargin = bottomSpace
         view.editTouchView.asLayoutParams<MarginLayoutParams>().apply {
-            view.editTouchView.background = mDelegate.edit_background
+            view.editTouchView.setBackgroundResource(mDelegate.edit_background)
             marginStart = mDelegate.edit_margin_start.toInt()
             marginEnd = mDelegate.edit_margin_end.toInt()
         }
 
         view.topPoint.asLayoutParams<MarginLayoutParams>().apply {
-            view.topPoint.setImageDrawable(mDelegate.edit_point_src)
+            view.topPoint.setImageResource(mDelegate.edit_point_src)
             width = mDelegate.edit_point_size
             height = mDelegate.edit_point_size
 
@@ -108,7 +108,7 @@ class ScheduleView : FrameLayout {
             topMargin = - mDelegate.edit_point_size / 2
         }
         view.bottomPoint.asLayoutParams<MarginLayoutParams>().apply {
-            view.bottomPoint.setImageDrawable(mDelegate.edit_point_src)
+            view.bottomPoint.setImageResource(mDelegate.edit_point_src)
             width = mDelegate.edit_point_size
             height = mDelegate.edit_point_size
 
@@ -158,7 +158,7 @@ class ScheduleView : FrameLayout {
         }
         view.point.apply {
             this.visibility = if (mDelegate.current_time_show_point) View.VISIBLE else View.GONE
-            this.setImageDrawable(mDelegate.current_time_point_src)
+            this.setImageResource(mDelegate.current_time_point_src)
             this.asLayoutParams<MarginLayoutParams>().apply {
                 width = mDelegate.current_time_point_width
                 height = mDelegate.current_time_point_height
@@ -370,7 +370,6 @@ class ScheduleView : FrameLayout {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-
         var consume = false
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -649,6 +648,7 @@ class ScheduleView : FrameLayout {
      * @param item TimeTableItem
      */
     fun addItem(item: ScheduleItem) {
+        item.maxLines = mDelegate.item_text_max_lines
         itemViewList.add(item)
         measureItemColumn()
         addView(item, indexOfChild(currentTime))
@@ -662,6 +662,7 @@ class ScheduleView : FrameLayout {
      * @param item Array<out TimeTableItem>
      */
     fun addItems(vararg item: ScheduleItem) {
+        item.forEach { it.maxLines = mDelegate.item_text_max_lines }
         itemViewList.addAll(item)
         measureItemColumn()
         item.forEach { addView(it, indexOfChild(currentTime)) }
@@ -687,11 +688,11 @@ class ScheduleView : FrameLayout {
         item.setOnClickListener(itemClickListener)
         //item.updateLayoutParams()
 
-        item.background = mDelegate.item_background
+        item.setBackgroundResource(mDelegate.item_background)
 
         item.ivLeft.apply {
             this.visibility = if (mDelegate.item_show_left_icon) View.VISIBLE else View.GONE
-            this.setImageDrawable(mDelegate.item_left_icon_src)
+            this.setImageResource(mDelegate.item_left_icon_src)
         }
 
         item.tvContent.apply {
@@ -963,8 +964,8 @@ class ScheduleView : FrameLayout {
                         mDelegate.item_text_color
                     )
                 }
-                item.background = bg
-                item.ivLeft.setImageDrawable(left)
+                item.setBackgroundResource(bg)
+                item.ivLeft.setImageResource(left)
                 item.tvContent.setTextColor(color)
             }
         }
@@ -1049,7 +1050,10 @@ class ScheduleView : FrameLayout {
             for (position in 0 until adapter.getItemCount()) {
                 val item = adapter.getItem(position)
                 val view = itemViewList.getOrNull(position)
-                    ?: createItem(Period.ZERO, Period.ZERO).also { itemViewList.add(it) }
+                    ?: createItem(Period.ZERO, Period.ZERO).also {
+                        it.maxLines = mDelegate.item_text_max_lines
+                        itemViewList.add(it)
+                    }
                 adapter.bindView(item, view, position)
             }
 

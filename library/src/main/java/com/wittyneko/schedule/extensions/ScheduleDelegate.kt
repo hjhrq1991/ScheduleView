@@ -2,7 +2,7 @@ package com.wittyneko.schedule.extensions
 
 import android.content.res.Resources
 import android.content.res.TypedArray
-import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
 import com.wittyneko.schedule.R
 
 /**
@@ -40,7 +40,7 @@ class ScheduleDelegate {
     /**
      * 计划项北京
      */
-    lateinit var item_background: Drawable
+    @DrawableRes var item_background: Int = 0
 
     /**
      * 计划项文本颜色
@@ -51,6 +51,11 @@ class ScheduleDelegate {
      * 计划项文本大小
      */
     var item_text_size: Int = 0
+
+    /**
+     * 文本最大行数，默认为view可显示区域，当设置时，显示区域可显示行数小雨设置值时按显示区域
+     */
+    var item_text_max_lines: Int = -1
 
     /**
      * 计划项文本左边距
@@ -80,7 +85,7 @@ class ScheduleDelegate {
     /**
      * 计划项左侧icon资源
      */
-    lateinit var item_left_icon_src: Drawable
+    @DrawableRes var item_left_icon_src: Int = 0
 
     /**
      * 计划项完成的样式，默认系统系统样式，用户可设置为[ITEM_END_MODE_USER_SET]在[ScheduleView.Adapter]中自行设置
@@ -90,7 +95,7 @@ class ScheduleDelegate {
     /**
      * 计划项完成背景
      */
-    lateinit var item_end_background: Drawable
+    @DrawableRes var item_end_background: Int = 0
 
     /**
      * 计划项完成文本颜色
@@ -130,7 +135,7 @@ class ScheduleDelegate {
     /**
      * 计划项完成左侧icon资源
      */
-    lateinit var item_end_left_icon_src: Drawable
+    @DrawableRes var item_end_left_icon_src: Int = 0
 
     /**
      * 震动时长，单位毫秒
@@ -170,7 +175,7 @@ class ScheduleDelegate {
     /**
      * 编辑状态背景
      */
-    lateinit var edit_background: Drawable
+    @DrawableRes var edit_background: Int = 0
 
     /**
      * 编辑框左边距
@@ -190,7 +195,7 @@ class ScheduleDelegate {
     /**
      * 编辑框圆点资源
      */
-    lateinit var edit_point_src: Drawable
+    @DrawableRes var edit_point_src: Int = 0
 
     /**
      * 编辑框圆点边距
@@ -291,7 +296,7 @@ class ScheduleDelegate {
     /**
      * 当前时间线圆点资源
      */
-    lateinit var current_time_point_src: Drawable
+    @DrawableRes var current_time_point_src: Int = 0
 
     /**
      * 当前时间线圆点宽度
@@ -369,19 +374,20 @@ class ScheduleDelegate {
         item_margin_start = resources.idp(56)
         item_margin_end = resources.idp(15)
 
-        item_background = resources.drawable(R.drawable.bg_schedule_item_now)
+        item_background = R.drawable.bg_schedule_item_now
         item_text_color = resources.color(R.color.color_2A2F3C)
         item_text_size = resources.isp(12)
+        item_text_max_lines = -1
         item_text_margin_start = resources.idp(7)
         item_text_margin_top = resources.idp(3)
         item_text_margin_end = resources.idp(7)
         item_text_margin_bottom = resources.idp(3)
         item_show_left_icon = true
-        item_left_icon_src = resources.drawable(R.drawable.bg_schedule_item_now_left)
+        item_left_icon_src = R.drawable.bg_schedule_item_now_left
 
         item_end_mode = ITEM_END_MODE_DEFAULT
 
-        item_end_background = resources.drawable(R.drawable.bg_schedule_item_past)
+        item_end_background = R.drawable.bg_schedule_item_past
         item_end_text_color = resources.color(R.color.color_BCC1CD)
         item_end_text_size = resources.isp(12)
         item_end_text_margin_start = resources.idp(7)
@@ -389,7 +395,7 @@ class ScheduleDelegate {
         item_end_text_margin_end = resources.idp(7)
         item_end_text_margin_bottom = resources.idp(3)
         item_end_show_left_icon = true
-        item_end_left_icon_src = resources.drawable(R.drawable.bg_schedule_item_past_left)
+        item_end_left_icon_src = R.drawable.bg_schedule_item_past_left
 
         vibrate_time = 5L
         edit_enable = true
@@ -398,11 +404,11 @@ class ScheduleDelegate {
         append_enable = true
         append_vibrate_enable = true
         append_modify_date_vibrate_enable = true
-        edit_background = resources.drawable(R.drawable.bg_schedule_edit)
+        edit_background = R.drawable.bg_schedule_edit
         edit_margin_start = resources.idp(56)
         edit_margin_end = resources.idp(15)
         edit_point_size = resources.idp(6)
-        edit_point_src = resources.drawable(R.drawable.bg_schedule_point_edit)
+        edit_point_src = R.drawable.bg_schedule_point_edit
         edit_point_margin_start = resources.idp(28)
         edit_point_margin_end = resources.idp(28)
 
@@ -425,7 +431,7 @@ class ScheduleDelegate {
         current_time_text_size = resources.isp(12)
         current_time_text_margin_start = resources.idp(16)
         current_time_show_point = true
-        current_time_point_src = resources.drawable(R.drawable.bg_schedule_point_current_time)
+        current_time_point_src = R.drawable.bg_schedule_point_current_time
         current_time_point_width = resources.idp(6)
         current_time_point_height = resources.idp(6)
         current_time_point_margin_start = resources.idp(48)
@@ -448,217 +454,75 @@ class ScheduleDelegate {
 
         min_minute = typedArray.getInteger(R.styleable.ScheduleView_min_minute, min_minute)
 
-        item_space =
-            typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_space, item_space)
-        item_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_item_margin_start,
-            item_margin_start
-        )
-        item_margin_end = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_item_margin_end,
-            item_margin_end
-        )
+        item_space = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_space, item_space)
+        item_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_margin_start, item_margin_start)
+        item_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_margin_end, item_margin_end)
 
-        item_background =
-            typedArray.getDrawable(R.styleable.ScheduleView_item_background).takeIf { it != null }
-                ?: item_background
-        item_text_color =
-            typedArray.getColor(R.styleable.ScheduleView_item_text_color, item_text_color)
-        item_text_size = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_item_text_size,
-            item_text_size
-        )
-        item_text_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_item_text_margin_start,
-            item_text_margin_start
-        )
-        item_text_margin_top = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_item_text_margin_top,
-            item_text_margin_top
-        )
-        item_text_margin_end = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_item_text_margin_end,
-            item_text_margin_end
-        )
-        item_text_margin_bottom = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_item_text_margin_bottom,
-            item_text_margin_bottom
-        )
-        item_show_left_icon =
-            typedArray.getBoolean(R.styleable.ScheduleView_item_show_left_icon, item_show_left_icon)
-        item_left_icon_src = typedArray.getDrawable(R.styleable.ScheduleView_item_left_icon_src)
-            .takeIf { it != null } ?: item_left_icon_src
+        item_background = typedArray.getResourceId(R.styleable.ScheduleView_item_background, item_background)
+        item_text_color = typedArray.getColor(R.styleable.ScheduleView_item_text_color, item_text_color)
+        item_text_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_text_size, item_text_size)
+        item_text_max_lines = typedArray.getInteger(R.styleable.ScheduleView_item_text_max_lines, item_text_max_lines)
+        item_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_text_margin_start, item_text_margin_start)
+        item_text_margin_top = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_text_margin_top, item_text_margin_top)
+        item_text_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_text_margin_end, item_text_margin_end)
+        item_text_margin_bottom = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_item_text_margin_bottom, item_text_margin_bottom)
+        item_show_left_icon = typedArray.getBoolean(R.styleable.ScheduleView_item_show_left_icon, item_show_left_icon)
+        item_left_icon_src = typedArray.getResourceId(R.styleable.ScheduleView_item_left_icon_src, item_left_icon_src)
 
         item_end_mode = typedArray.getInteger(R.styleable.ScheduleView_item_end_mode, item_end_mode)
-        item_end_background = typedArray.getDrawable(R.styleable.ScheduleView_item_end_background)
-            .takeIf { it != null } ?: item_end_background
-        item_end_text_color =
-            typedArray.getColor(R.styleable.ScheduleView_item_end_text_color, item_end_text_color)
-        item_end_left_icon_src =
-            typedArray.getDrawable(R.styleable.ScheduleView_item_end_left_icon_src)
-                .takeIf { it != null } ?: item_end_left_icon_src
+        item_end_background = typedArray.getResourceId(R.styleable.ScheduleView_item_end_background, item_end_background)
+        item_end_text_color = typedArray.getColor(R.styleable.ScheduleView_item_end_text_color, item_end_text_color)
+        item_end_left_icon_src = typedArray.getResourceId(R.styleable.ScheduleView_item_end_left_icon_src, item_end_left_icon_src)
 
         vibrate_time = typedArray.getInteger(R.styleable.ScheduleView_vibrate_time, 5) * 1L
         edit_enable = typedArray.getBoolean(R.styleable.ScheduleView_edit_enable, edit_enable)
-        edit_vibrate_enable =
-            typedArray.getBoolean(R.styleable.ScheduleView_edit_vibrate_enable, edit_vibrate_enable)
-        edit_modify_date_vibrate_enable = typedArray.getBoolean(
-            R.styleable.ScheduleView_edit_modify_date_vibrate_enable,
-            edit_modify_date_vibrate_enable
-        )
+        edit_vibrate_enable = typedArray.getBoolean(R.styleable.ScheduleView_edit_vibrate_enable, edit_vibrate_enable)
+        edit_modify_date_vibrate_enable = typedArray.getBoolean(R.styleable.ScheduleView_edit_modify_date_vibrate_enable, edit_modify_date_vibrate_enable)
         append_enable = typedArray.getBoolean(R.styleable.ScheduleView_append_enable, append_enable)
-        append_vibrate_enable = typedArray.getBoolean(
-            R.styleable.ScheduleView_append_vibrate_enable,
-            append_vibrate_enable
-        )
-        append_modify_date_vibrate_enable = typedArray.getBoolean(
-            R.styleable.ScheduleView_append_modify_date_vibrate_enable,
-            append_modify_date_vibrate_enable
-        )
-        edit_background =
-            typedArray.getDrawable(R.styleable.ScheduleView_edit_background).takeIf { it != null }
-                ?: edit_background
-        edit_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_margin_start,
-            edit_margin_start
-        )
-        edit_margin_end = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_margin_end,
-            edit_margin_end
-        )
-        edit_point_size = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_point_size,
-            edit_point_size
-        )
-        edit_point_src =
-            typedArray.getDrawable(R.styleable.ScheduleView_edit_point_src).takeIf { it != null }
-                ?: edit_point_src
+        append_vibrate_enable = typedArray.getBoolean(R.styleable.ScheduleView_append_vibrate_enable, append_vibrate_enable)
+        append_modify_date_vibrate_enable = typedArray.getBoolean(R.styleable.ScheduleView_append_modify_date_vibrate_enable, append_modify_date_vibrate_enable)
+        edit_background = typedArray.getResourceId(R.styleable.ScheduleView_edit_background, edit_background)
+        edit_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_margin_start, edit_margin_start)
+        edit_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_margin_end, edit_margin_end)
+        edit_point_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_point_size, edit_point_size)
+        edit_point_src = typedArray.getResourceId(R.styleable.ScheduleView_edit_point_src, edit_point_src)
         edit_point_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_point_margin_start, edit_point_margin_start)
         edit_point_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_point_margin_end, edit_point_margin_end)
 
-        edit_text_color =
-            typedArray.getColor(R.styleable.ScheduleView_edit_text_color, edit_text_color)
-        edit_text_size = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_text_size,
-            edit_text_size
-        )
-        edit_text_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_text_margin_start,
-            edit_text_margin_start
-        )
-        edit_text_margin_top = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_text_margin_top,
-            edit_text_margin_top
-        )
-        edit_text_margin_end = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_text_margin_end,
-            edit_text_margin_end
-        )
-        edit_text_margin_bottom = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_text_margin_bottom,
-            edit_text_margin_bottom
-        )
-        edit_start_text_color = typedArray.getColor(
-            R.styleable.ScheduleView_edit_start_text_color,
-            edit_start_text_color
-        )
-        edit_start_text_size = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_start_text_size,
-            edit_start_text_size
-        )
-        edit_start_text_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_start_text_margin_start,
-            edit_start_text_margin_start
-        )
-        edit_start_text_margin_top = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_start_text_margin_top,
-            edit_start_text_margin_top
-        )
-        edit_end_text_color =
-            typedArray.getColor(R.styleable.ScheduleView_edit_end_text_color, edit_end_text_color)
-        edit_end_text_size = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_end_text_size,
-            edit_end_text_size
-        )
-        edit_end_text_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_end_text_margin_start,
-            edit_end_text_margin_start
-        )
-        edit_end_text_margin_bottom = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_edit_end_text_margin_bottom,
-            edit_end_text_margin_bottom
-        )
+        edit_text_color = typedArray.getColor(R.styleable.ScheduleView_edit_text_color, edit_text_color)
+        edit_text_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_text_size, edit_text_size)
+        edit_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_text_margin_start, edit_text_margin_start)
+        edit_text_margin_top = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_text_margin_top, edit_text_margin_top)
+        edit_text_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_text_margin_end, edit_text_margin_end)
+        edit_text_margin_bottom = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_text_margin_bottom, edit_text_margin_bottom)
+        edit_start_text_color = typedArray.getColor(R.styleable.ScheduleView_edit_start_text_color, edit_start_text_color)
+        edit_start_text_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_start_text_size, edit_start_text_size)
+        edit_start_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_start_text_margin_start, edit_start_text_margin_start)
+        edit_start_text_margin_top = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_start_text_margin_top, edit_start_text_margin_top)
+        edit_end_text_color = typedArray.getColor(R.styleable.ScheduleView_edit_end_text_color, edit_end_text_color)
+        edit_end_text_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_end_text_size, edit_end_text_size)
+        edit_end_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_end_text_margin_start, edit_end_text_margin_start)
+        edit_end_text_margin_bottom = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_edit_end_text_margin_bottom, edit_end_text_margin_bottom)
 
-        current_time_text_color = typedArray.getColor(
-            R.styleable.ScheduleView_current_time_text_color,
-            current_time_text_color
-        )
-        current_time_text_size = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_text_size,
-            current_time_text_size
-        )
-        current_time_text_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_text_margin_start,
-            current_time_text_margin_start
-        )
-        current_time_show_point = typedArray.getBoolean(
-            R.styleable.ScheduleView_current_time_show_point,
-            current_time_show_point
-        )
-        current_time_point_src =
-            typedArray.getDrawable(R.styleable.ScheduleView_current_time_point_src)
-                .takeIf { it != null } ?: current_time_point_src
-        current_time_point_width = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_point_width,
-            current_time_point_width
-        )
-        current_time_point_height = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_point_height,
-            current_time_point_height
-        )
-        current_time_point_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_point_margin_start,
-            current_time_point_margin_start
-        )
-        current_time_line_height = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_line_height,
-            current_time_line_height
-        )
-        current_time_line_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_line_margin_start,
-            current_time_line_margin_start
-        )
-        current_time_line_margin_end = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_current_time_line_margin_end,
-            current_time_line_margin_end
-        )
-        current_time_line_src = typedArray.getColor(
-            R.styleable.ScheduleView_current_time_line_src,
-            current_time_line_src
-        )
+        current_time_text_color = typedArray.getColor(R.styleable.ScheduleView_current_time_text_color, current_time_text_color)
+        current_time_text_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_text_size, current_time_text_size)
+        current_time_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_text_margin_start, current_time_text_margin_start)
+        current_time_show_point = typedArray.getBoolean(R.styleable.ScheduleView_current_time_show_point, current_time_show_point)
+        current_time_point_src = typedArray.getResourceId(R.styleable.ScheduleView_current_time_point_src, current_time_point_src)
+        current_time_point_width = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_width, current_time_point_width)
+        current_time_point_height = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_height, current_time_point_height)
+        current_time_point_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_point_margin_start, current_time_point_margin_start)
+        current_time_line_height = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_height, current_time_line_height)
+        current_time_line_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_margin_start, current_time_line_margin_start)
+        current_time_line_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_current_time_line_margin_end, current_time_line_margin_end)
+        current_time_line_src = typedArray.getColor(R.styleable.ScheduleView_current_time_line_src, current_time_line_src)
 
-        time_text_color =
-            typedArray.getColor(R.styleable.ScheduleView_time_text_color, time_text_color)
-        time_text_size = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_time_text_size,
-            time_text_size
-        )
-        time_text_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_time_text_margin_start,
-            time_text_margin_start
-        )
-        time_line_height = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_time_line_height,
-            time_line_height
-        )
-        time_line_margin_start = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_time_line_margin_start,
-            time_line_margin_start
-        )
-        time_line_margin_end = typedArray.getDimensionPixelSize(
-            R.styleable.ScheduleView_time_line_margin_end,
-            time_line_margin_end
-        )
+        time_text_color = typedArray.getColor(R.styleable.ScheduleView_time_text_color, time_text_color)
+        time_text_size = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_text_size, time_text_size)
+        time_text_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_text_margin_start, time_text_margin_start)
+        time_line_height = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_line_height, time_line_height)
+        time_line_margin_start = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_line_margin_start, time_line_margin_start)
+        time_line_margin_end = typedArray.getDimensionPixelSize(R.styleable.ScheduleView_time_line_margin_end, time_line_margin_end)
         time_line_src = typedArray.getColor(R.styleable.ScheduleView_time_line_src, time_line_src)
 
         typedArray.recycle()
